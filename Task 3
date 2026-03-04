@@ -1,0 +1,48 @@
+    JMP start
+vec_a:
+    DB 3, 5, 2
+vec_b:
+    DB 4, 1, 6
+len:
+    DB 3
+start:
+    MOV B, 0      ; результат
+    MOV C, 0      ; индекс
+
+loop:
+    MOV D, vec_a
+    ADD D, C
+    PUSH [D]
+    MOV D, vec_b
+    ADD D, C
+    PUSH [D]
+    POP A
+    POP D
+    MUL D
+    ADD B, A
+    INC C
+    CMP C, [len]
+    JNZ loop
+
+prepare:
+    MOV A, B
+    MOV C, 0
+digit:
+    INC C
+    DIV 10
+    JNZ digit
+    ADD C, 231
+    MOV A, B
+print:
+    DIV 10
+    MUL 10
+    SUB B, A
+    ADD B, 48
+    MOV [C], B
+    DIV 10
+    MOV B, A
+    DEC C
+    CMP C, 231
+    JNZ print
+
+    HLT
