@@ -1,0 +1,39 @@
+; ReLU
+; Read numbers from input_vec and write to output_vec
+
+    MOV A, input_vec
+    MOV B, output_vec
+    MOV C, 4
+
+loop_start:
+    FMOV.H FHA,[A]
+    
+    FCMP.H FHA, [zero_val]
+    
+    JNC save_result
+    JZ save_result
+    
+    FMOV.H FHA, [zero_val]
+
+save_result:
+    FMOV.H [B], FHA
+    
+    ADD A, 2
+    ADD B, 2
+    
+    DEC C
+    JNZ loop_start
+    
+    HLT
+
+input_vec:
+    DB 0x00, 0x3C       ; 1.0 (expected 1.0)
+    DB 0x00, 0xC0       ; -2.0 (should become 0.0)
+    DB 0x00, 0x38       ; 0.5  (expected 0.5)
+    DB 0x00, 0xB8       ; -0.5 (should become 0.0)
+
+output_vec:
+    DB 0, 0, 0, 0, 0, 0, 0, 0
+
+zero_val:
+    DB 0x00, 0x00
