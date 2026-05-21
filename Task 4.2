@@ -1,0 +1,22 @@
+JMP start
+vec_a: DB 3, 5, 2, 4, 1
+vec_b: DB 4, 1, 6, 2, 3
+len: DB 5
+dot_res: DB 0
+
+start:
+	MOV A, len
+	MOV A, [A]
+	VSET VL, A
+
+	VSET VA, vec_a
+	VSET VB, vec_b
+	VSET VC, dot_res
+
+	VDOT.U VC, VA, VB
+	VWAIT
+ 
+	MOV B, dot_res
+	MOV A, [B]
+
+	HLT

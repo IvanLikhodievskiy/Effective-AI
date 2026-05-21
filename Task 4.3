@@ -1,0 +1,45 @@
+JMP start
+m: DB 2
+n: DB 3
+mat: DB 1.0_o3, 2.0_o3, 0.5_o3
+     DB 1.5_o3, 1.0_o3, 2.0_o3
+vec: DB 2.0_o3, 1.0_o3, 1.5_o3
+res: DB 0.0_h, 0.0_h
+
+vec_h: DB 0.0_h, 0.0_h, 0.0_h
+mat_row_h: DB 0.0_h, 0.0_h, 0.0_h
+
+start:
+     MOV C, m
+     MOV C, [C]
+     MOV E, n
+     MOV E, [E]         
+     VSET VL, E
+
+     VSET VA, vec
+     VSET VB, vec_h
+     VCVT.H.O3 VB, VA   
+ 
+     MOV A, mat
+     VSET VA, A
+     MOV D, res
+     VSET VC, D
+
+.loop:
+     CMP C, 0
+     JZ .end
+ 
+     VSET VB, mat_row_h
+     VCVT.H.O3 VB, VA
+
+     VSET VB, mat_row_h
+     VSET VM, vec_h     
+ 
+     VDOT.H VC, VB, VM
+ 
+     DEC C
+     JMP .loop
+ 
+.end:
+     VWAIT
+     HLT

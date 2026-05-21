@@ -1,0 +1,39 @@
+JMP start
+logits: DB 1.0_h, 2.0_h, 0.5_h
+len: DB 3
+res: DB 0.0_h, 0.0_h, 0.0_h
+
+max_val: DB 0.0_h
+sum_val: DB 0.0_h
+
+start:
+	MOV A, len
+	MOV A, [A]
+	VSET VL, A
+
+	VSET VA, logits
+	VSET VC, max_val
+	VMAX.H.r VC, VA
+	VWAIT
+ 
+	VSET VA, logits
+	VSET VB, max_val
+	VSET VC, res
+	VSUB.H.vs VC, VA, VB
+
+	VSET VA, res
+	VSET VC, res
+	VEXP.H VC, VA
+ 
+	VSET VA, res
+	VSET VC, sum_val
+	VADD.H.r VC, VA
+	VWAIT
+ 
+	VSET VA, res
+	VSET VB, sum_val
+	VSET VC, res
+	VDIV.H.vs VC, VA, VB
+ 
+	VWAIT
+	HLT

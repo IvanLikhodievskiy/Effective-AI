@@ -1,0 +1,59 @@
+JMP start
+m: DB 2
+n: DB 3
+mat: DB 1.0_o3, 2.0_o3, 0.5_o3
+     DB 1.5_o3, 1.0_o3, 2.0_o3
+vec: DB 2.0_o3, 1.0_o3, 1.5_o3
+res: DB 0.0_h, 0.0_h
+
+start:
+     MOV A, mat
+     MOV B, vec
+     MOV C, m
+     MOV D, res
+ 
+     MOV C, [C]
+     PUSH C
+
+.outer_loop:
+     POP C
+     CMP C, 0
+     JZ .end_outer
+     PUSH C
+
+     FMOV.H FHD, [D]
+     MOV B, vec
+ 
+     MOV C, n
+     MOV C, [C]
+
+.inner_loop:
+     CMP C, 0
+     JZ .end_inner
+
+     FMOV.O3 FQA, [A]
+     FMOV.O3 FQE, [B]
+ 
+     FCVT.H.O3 FHA, FQA
+     FCVT.H.O3 FHC, FQE
+     FMUL.H FHA, FHC
+     FADD.H FHD, FHA
+ 
+     INC A
+     INC B
+     DEC C
+     JMP .inner_loop
+
+.end_inner:
+     FMOV.H [D], FHD
+     INC D
+     INC D
+
+     POP C
+     DEC C
+     PUSH C
+     JMP .outer_loop
+
+.end_outer:
+     POP C
+     HLT

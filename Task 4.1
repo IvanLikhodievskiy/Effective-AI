@@ -1,0 +1,21 @@
+JMP start
+data: DB 10, 20, 30, 15, 25
+      DB 40, 10, 5, 35, 10
+len: DB 10
+sum_res: DB 0
+
+start:
+      MOV A, len
+      MOV A, [A]
+      VSET VL, A
+
+      VSET VA, data
+      VSET VC, sum_res
+ 
+      VADD.U.r VC, VA
+      VWAIT
+ 
+      MOV B, sum_res
+      MOV A, [B]
+
+      HLT

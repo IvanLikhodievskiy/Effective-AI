@@ -1,0 +1,40 @@
+JMP start
+x: DB 1.0_h
+res: DB 0.0_h
+
+start:
+	MOV A, x
+	MOV B, res
+	FMOV.H FHA, [A]
+
+	MOV C, c_inv24
+	FMOV.H FHD, [C]
+ 
+	FMUL.H FHD, FHA
+	MOV C, c_inv6
+	FMOV.H FHC, [C]
+	FADD.H FHD, FHC
+ 
+	FMUL.H FHD, FHA
+	MOV C, c_inv2
+	FMOV.H FHC, [C]
+	FADD.H FHD, FHC
+ 
+	FMUL.H FHD, FHA
+	MOV C, c1
+	FMOV.H FHC, [C]
+ 	FADD.H FHD, FHC
+ 
+	FMUL.H FHD, FHA
+	FADD.H FHD, FHC
+ 
+	FMOV.H [B], FHD
+	JMP .done
+
+c1:      DB 1.0_h
+c_inv2:  DB 0.5_h
+c_inv6:  DB 0.166667_h
+c_inv24: DB 0.0416667_h
+
+.done:
+	HLT
